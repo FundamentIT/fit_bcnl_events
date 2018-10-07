@@ -1,0 +1,14 @@
+.o_list_number {
+    text-align: left !important;
+    white-space: nowrap;
+}
+
+.fit_subscription_details_txt {
+    display: inline-block;
+    width: 30%;
+    font-size: 90%;
+}
+
+.fit_subscription_details_val {
+    font-size: 90%;
+}

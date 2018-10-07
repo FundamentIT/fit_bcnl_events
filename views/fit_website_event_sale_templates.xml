@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- FIT: copied from website_event_templates.xml-->
+
+    <template id="assets_frontend" name="fit_bcnl_events_assets" inherit_id="website.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/fit_bcnl_events/static/src/css/fit_bcnl_events.css"/>
+        </xpath>
+    </template>
+
+
+    <template id="fit_bcnl_events.index" inherit_id="website_event.index" name="Event's Ticket">
+        <xpath expr="//ul[@class='media-list']" position="replace">
+            <ul class="media-list">
+                <li t-foreach="event_ids" t-as="event" class="media" t-if="event.website_published">
+                    <form action="/fit_subscribe_controller/subscribe" method="post">
+                        <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
+                            <h4 class="media-heading">
+                                <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'"
+                                   t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}">
+                                    <span itemprop="name" t-field="event.name"></span>
+                                </a>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="event_id" t-att-value="event.id"/>
+                                <input type="hidden" name="event_is_participating" t-att-value="event.is_participating"/>
+                            <!--</h4>-->
+                            <!--<div>-->
+                                <button groups="base.group_user" t-if="not event.is_participating and
+                                        (
+                                            (event.seats_available and
+                                            event.seats_available &gt;= 0)
+                                            or
+                                            (event.seats_availability == 'unlimited')
+                                        ) and request.env.user.partner_id.can_subscribe(event)"
+                                        name="fit_event_subscribe" type="object"
+                                        class="btn btn-success btn-sm label" style="line-height:1">Subscribe
+                                </button>
+                                <button groups="base.group_user"
+                                        t-if="event.is_participating and request.env.user.partner_id.can_unsubscribe(event)" type="submit"
+                                        class="btn btn-danger btn-sm label"
+                                        style="line-height:1">
+                                    Unsubscribe
+                                </button>
+                            <!--</div>-->
+                            </h4>
+                            <div>
+                                <i class="fa fa-clock-o"></i>
+                                <span t-esc="time.strftime('%A, %d %B %Y',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
+                            </div>
+                            <div>
+                                <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
+                                <span> - </span>
+                                <i class="fa fa-stop-circle" aria-hidden="true"></i>
+                                <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_end_located,'%Y-%m-%d %H:%M:%S'))"/>
+                            </div>
+                            <div>
+                                <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                <span t-esc="time.strftime('%H:%M',time.strptime(event.date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
+                                <span t-field="event.with_context(tz=event.date_tz).date_begin_located" t-options='{"hide_seconds":"True"}'> </span>
+                                <span> - </span>
+                                <i class="fa fa-stop-circle" aria-hidden="true"></i>
+                                <span t-esc="time.strftime('%H:%M',time.strptime(event.date_end_located,'%Y-%m-%d %H:%M:%S'))"/>
+                            </div>
+                            <div itemprop="location" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["city"]
+                                    }'/>
+                            <div groups="base.group_user">
+                                <i class="fa fa-users"></i>
+                                <span t-if="event.seats_availability == 'limited'">
+                                    <span t-esc="event.seats_max - event.seats_available"/>
+                                    van
+                                    <span t-field="event.seats_max"/>
+                                </span>
+                                <span t-if="event.seats_availability == 'unlimited'">
+                                    <span t-esc="seats_unconfirmed"/>
+                                    van onbeperkt
+                                </span>
+                            </div>
+                            <div class="text-muted" t-if="event.event_type_id">
+                                <i class="fa fa-tag"></i>
+                                <span t-field="event.event_type_id"/>
+                            </div>
+<!--                            <div>
+                                <t t-foreach="event.registration_ids" t-as="registration">
+                                    <t t-foreach="registration.partner_id" t-as="partner">
+                                        <p>
+                                            &lt;!&ndash;<span t-field="partner.name"/>&ndash;&gt;
+                                        </p>
+                                    </t>
+                                </t>
+                            </div>-->
+                        </div>
+                    </form>
+                    <div style="display:none;">
+                        <h4><!--DONT DELETE, NEEDED FOR website_events module--></h4>
+                    </div>
+
+                </li>
+            </ul>
+        </xpath>
+    </template>
+
+    <template id="event_right_photos" inherit_id="website_event.index" active="True" customize_show="True" name="Inschrijving">
+        <xpath expr="//div[@id='right_column']" position="inside" groups="base.group_user">
+            <div class="row">
+                <div class="col-md-12 mb16">
+                    <div class="oe_demo">
+                        <p class="alert alert-info">
+                            <b>Overzicht inschrijvingen</b>
+                            <br/>
+                            <br/>
+                            <t t-foreach="request.env.user.partner_id.fit_subscriptions" t-as="subscription">
+                                <span class="fit_subscription_details_txt">Type:</span>
+                                <span class="fit_subscription_details_val" t-field="subscription.subscription_type"/>
+                                <br/>
+                                <span class="fit_subscription_details_txt">Actief?:</span>
+                                <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == True">Ja</span>
+                                <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == False">Nee</span>
+                                <br/>
+                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                    <span class="fit_subscription_details_txt">Startdatum:</span>
+                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_start"/>
+                                    <br/>
+                                </t>
+                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                    <span class="fit_subscription_details_txt">Einddatum:</span>
+                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_end"/>
+                                </t>
+                                <t t-if="subscription.subscription_type == 'bz_tickets' or subscription.subscription_type == 'bc_tickets'">
+                                    <span class="fit_subscription_details_txt">Strippen:</span>
+                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_counter"/>
+                                </t>
+                                <br/>
+                                <br/>
+                            </t>
+                            <form action="/shop" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <button groups="base.group_user"
+                                        name="fit_event_renew" type="object"
+                                        class="btn btn-info btn-sm label" style="line-height:1.5">Verniewen
+                                </button>
+                            </form>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

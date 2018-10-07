@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="fit_bcnl_events_assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/fit_bcnl_events/static/src/css/fit_bcnl_events.css"/>
+        </xpath>
+    </template>
+
+    <record id="fit_res_partner" model="ir.ui.view">
+        <field name="name">Partner Extended View</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!--<xpath expr="//page[@name='internal_notes']" position="after">-->
+            <xpath expr="//page[last()]" position="after">
+                <page string="Inschrijvingen" name="fit_subscriptions">
+                     <!--<group name="inschrijv">-->
+                          <field name="fit_subscriptions" nolabel="1" colspan="1" >
+                                <tree string="Details" class="" colspan="1" editable="top" delete="true" update="true"
+                                      create="true">
+                                    <field name="subscription_type" />
+                                    <field name="subscription_counter"/>
+                                    <field name="subscription_start"/>
+                                    <field name="subscription_end"/>
+                                </tree>
+                            </field>
+                    <!--</group>-->
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!--<record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            &lt;!&ndash;<xpath expr="//page[@string='Accounting']" position='after'>&ndash;&gt;
+            &lt;!&ndash;<page string='My new tab'>&ndash;&gt;
+
+            &lt;!&ndash;</page>&ndash;&gt;
+            &lt;!&ndash;</xpath>&ndash;&gt;
+        </field>
+    </record>-->
+</odoo>

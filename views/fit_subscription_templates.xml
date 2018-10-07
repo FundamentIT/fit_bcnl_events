@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_form_subscription" model="ir.ui.view">
+        <field name="name">Inschrijvingen</field>
+        <field name="model">fit.subscription</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Inschrijvingen" create="true" edit="true" write="true">
+                <header>
+                    <button id="fit_subscription_refresh" string="Vernieuw" type="object" name="refresh_subscription" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group name="group-top">
+                        <field name="subscription_type" readonly="0"/>
+                        <group name="group-top-left"  attrs="{'invisible': ['&amp;',
+                                ('subscription_type','!=','cf_montly'),
+                                ('subscription_type','!=','cf_quarterly'),
+                                ('subscription_type','!=','cf_half_year'),
+                                ('subscription_type','!=','bc_montly')
+                                ]}">
+                            <separator string="Abonnement gegevens" colspan="2"/>
+                            <field name="subscription_start" readonly="0"/>
+                            <field name="subscription_end" readonly="0"/>
+                        </group>
+                        <group name="group-top-left"  attrs="{'invisible': ['&amp;',
+                                ('subscription_type','!=','bc_tickets'),
+                                ('subscription_type','!=','bz_tickets')
+                                ]}">
+                            <separator string="Strippenkaart gegevens" colspan="2"/>
+                            <field name="subscription_counter" readonly="0"/>
+                        </group>
+                        <group name="group-top-right">
+                            <field name="id" readonly="1" attr="{'invisible': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
