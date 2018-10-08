@@ -25,6 +25,17 @@ class FitEvent(models.Model):
         if start_date:
             self.fit_day_of_week = datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S').strftime('%a')
 
+    def get_attendee_list(self):
+        attendee_list = str('')
+        counter = 1
+        for registration in self.registration_ids:
+            if counter == 1:
+                attendee_list += str(registration.partner_id.name)
+            else:
+                attendee_list += ', ' + str(registration.partner_id.name)
+            counter+=1
+        return attendee_list
+
     def start_automatic_event_creation(self):
         repeating_event_ids = self.env['event.event'].search([('fit_repetition_enabled', '=', True)])
         for repeating_event in repeating_event_ids:

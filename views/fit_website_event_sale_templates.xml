@@ -54,10 +54,16 @@
                                 <i class="fa fa-stop-circle" aria-hidden="true"></i>
                                 <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_end_located,'%Y-%m-%d %H:%M:%S'))"/>
                             </div>
+<!--
                             <div itemprop="location" t-field="event.address_id" t-options='{
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
+-->
+                            <div class="text-muted" t-if="event.event_type_id">
+                                <i class="fa fa-tag"></i>
+                                <span t-field="event.event_type_id"/>
+                            </div>
                             <div groups="fit_bcnl_events.group_user">
                                 <i class="fa fa-users"></i>
                                 <span t-if="event.seats_availability == 'limited'">
@@ -70,21 +76,17 @@
                                     van onbeperkt
                                 </span>
                             </div>
-                            <div class="text-muted" t-if="event.event_type_id">
-                                <i class="fa fa-tag"></i>
-                                <span t-field="event.event_type_id"/>
-                            </div>
-<!--                            <div>
+                            <div style="font-size:80%">
+                                <span t-esc="event.get_attendee_list()"/>
+<!--
                                 <t t-foreach="event.registration_ids" t-as="registration">
                                     <t t-foreach="registration.partner_id" t-as="partner">
-                                        <p>
-                                            &lt;!&ndash;<span t-field="partner.name"/>&ndash;&gt;
-                                        </p>
+                                        <span t-field="partner.name"/><span t-raw=", "/>
                                     </t>
                                 </t>
-                            </div>-->
+-->
+                            </div>
                         </div>
-                        <div>asdas</div>
                     </form>
                     <div style="display:none;">
                         <h4><!--DONT DELETE, NEEDED FOR website_events module--></h4>
