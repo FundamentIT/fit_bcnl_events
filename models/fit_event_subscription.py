@@ -44,8 +44,7 @@ class FitEventSubscription(models.Model):
     @api.onchange('subscription_start')
     def on_change_start(self):
         if self.subscription_type:
-            months = self.get_subscription_type(self.subscription_type, 0)
-            dt = datetime.strptime(self.subscription_start, '%Y-%m-%d') + relativedelta(months=+months)
+            dt = datetime.strptime(self.subscription_start, '%Y-%m-%d') + relativedelta(months=+1)
             self.subscription_end = dt
 
     @api.onchange('subscription_type')

@@ -77,6 +77,10 @@ class FitEvent(models.Model):
 
     def _create_new_event(self, old_repeating_event, new_start_date, new_end_date):
         _logger.info('Start creation new repeating event')
-        old_repeating_event.copy(default={'date_end_': str(new_end_date), 'date_begin': str(new_start_date), 'website_published': True})
+        new_repeating_event = old_repeating_event.copy(default={'website_published': True})
+        new_repeating_event.date_end = new_end_date
+        new_repeating_event.date_begin=new_start_date
+
+        # 'date_begin': str(new_start_date), 'date_end_': str(new_end_date),
         old_repeating_event.fit_repetition_enabled = False
         old_repeating_event.fit_repetition = ''

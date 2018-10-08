@@ -40,10 +40,15 @@ class WebsiteEventController(http.Controller):
 
     def _update_counter_subscription(self, event, partner, subscription_update_counter):
         event_cat = str(event.event_type_id.name).lower()
-        cf_montly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'cf_montly')])
-        bc_montly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bc_montly')])
-        bc_tickets = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bc_tickets')])
-        bz_tickets = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bz_tickets')])
+        cf_montly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'cf_montly'),
+                                                                        ('subscription_partner', '=', partner.id)])
+
+        bc_montly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bc_montly'),
+                                                                        ('subscription_partner', '=', partner.id)])
+        bc_tickets = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bc_tickets'),
+                                                                        ('subscription_partner', '=', partner.id)])
+        bz_tickets = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bz_tickets'),
+                                                                        ('subscription_partner', '=', partner.id)])
 
         if event_cat == 'bokszak':
             if bz_tickets and bz_tickets.subscription_is_active:
