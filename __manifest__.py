@@ -21,6 +21,7 @@ Extension for the default Events module; used for BCNL, .
         'security/user_groups.xml',
         'views/fit_subscription_templates.xml',
         'views/fit_website_event_sale_templates.xml',
+        'views/fit_website_event_templates.xml',
     ],
     'installable': True,
 }

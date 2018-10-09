@@ -12,3 +12,7 @@
 .fit_subscription_details_val {
     font-size: 90%;
 }
+
+.fit_panel_heading {
+    border-left: 1px solid black;
+}
