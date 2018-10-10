@@ -28,11 +28,11 @@ class FitEvent(models.Model):
     def get_attendee_list(self):
         attendee_list = str('')
         counter = 1
-        for registration in self.registration_ids:
+        for registration in self.sudo().registration_ids:
             if counter == 1:
-                attendee_list += str(registration.partner_id.name)
+                attendee_list += str(registration.partner_id.sudo().name)
             else:
-                attendee_list += ', ' + str(registration.partner_id.name)
+                attendee_list += ', ' + str(registration.partner_id.sudo().name)
             counter+=1
         return attendee_list
 

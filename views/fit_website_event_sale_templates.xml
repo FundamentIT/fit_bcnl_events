@@ -12,87 +12,122 @@
     <template id="fit_bcnl_events.index" inherit_id="website_event.index" name="Event's Ticket">
         <xpath expr="//ul[@class='media-list']" position="replace">
             <ul class="media-list">
-                <li t-foreach="event_ids" t-as="event" class="media" t-if="event.website_published">
-                    <form action="/fit_subscribe_controller/subscribe" method="post">
-                        <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
-                            <h4 class="media-heading">
-                                <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'"
-                                   t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}">
-                                    <span itemprop="name" t-field="event.name"></span>
-                                </a>
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <input type="hidden" name="event_id" t-att-value="event.id"/>
-                                <input type="hidden" name="event_is_participating" t-att-value="event.is_participating"/>
-                            <!--</h4>-->
-                            <!--<div>-->
-                                <button groups="fit_bcnl_events.group_user" t-if="not event.is_participating and
+                <t t-set="event_days" t-value="[]"/>
+                <t t-foreach="event_ids" t-as="event">
+                    <t t-set="event_days"
+                       t-value="event_days+[time.strftime('%Y-%m-%d',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))]"/>
+                </t>
+
+                <t t-set="previous_day" t-value="'unknown'"/>
+                <t t-foreach="event_days" t-as="event_day">
+                    <t t-esc="event_days.sort()"/>
+                    <t t-if="previous_day == 'unknown' or previous_day != event_day">
+                        <t t-if="previous_day != 'unknown'">
+                            <hr/>
+                        </t>
+                        <h4 class="media-heading">
+                            <strong t-esc="time.strftime('%A, %d %B %Y',time.strptime(event_day,'%Y-%m-%d')).title()"/>
+                        </h4>
+                        <t t-set="previous_day" t-value="event_day"/>
+
+                        <li t-foreach="event_ids" t-as="event" class="media"
+                            t-if="event.website_published and event_day == time.strftime('%Y-%m-%d',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))">
+                            <form action="/fit_subscribe_controller/subscribe" method="post">
+                                <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
+                                    <span class="media-heading">
+                                        <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'"
+                                           t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}">
+                                            <span itemprop="name" t-field="event.name"></span>
+                                        </a>
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="event_id" t-att-value="event.id"/>
+                                        <input type="hidden" name="event_is_participating" t-att-value="event.is_participating"/>
+                                        <!--</h4>-->
+                                        <!--<div>-->
+                                        <button groups="fit_bcnl_events.group_user" t-if="not event.is_participating and
                                         (
                                             (event.seats_available and
                                             event.seats_available &gt;= 0)
                                             or
                                             (event.seats_availability == 'unlimited')
                                         ) and request.env.user.partner_id.can_subscribe(event)"
-                                        name="fit_event_subscribe" type="object"
-                                        class="btn btn-success btn-sm label" style="line-height:1">Subscribe
-                                </button>
-                                <button groups="fit_bcnl_events.group_user"
-                                        t-if="event.is_participating and request.env.user.partner_id.can_unsubscribe(event)" type="submit"
-                                        class="btn btn-danger btn-sm label"
-                                        style="line-height:1">
-                                    Unsubscribe
-                                </button>
-                            <!--</div>-->
-                            </h4>
-                            <div>
-                                <i class="fa fa-clock-o"></i>
-                                <span t-esc="time.strftime('%A, %d %B %Y',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
+                                                name="fit_event_subscribe" type="object"
+                                                class="btn btn-success btn-sm label" style="line-height:1">Subscribe
+                                        </button>
+                                        <button groups="fit_bcnl_events.group_user"
+                                                t-if="event.is_participating and request.env.user.partner_id.can_unsubscribe(event)"
+                                                type="submit"
+                                                class="btn btn-danger btn-sm label"
+                                                style="line-height:1">
+                                            Unsubscribe
+                                        </button>
+                                        <!--</div>-->
+                                    </span>
+                                    <!--<div>
+                                        <i class="fa fa-clock-o"></i>
+                                        <span t-esc="time.strftime('%A, %d %B %Y',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
+                                    </div>-->
+                                    <div>
+                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                        <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
+                                        <span>-</span>
+                                        <i class="fa fa-stop-circle" aria-hidden="true"></i>
+                                        <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_end_located,'%Y-%m-%d %H:%M:%S'))"/>
+                                    </div>
+                                    <!--
+                                                                <div itemprop="location" t-field="event.address_id" t-options='{
+                                                                        "widget": "contact",
+                                                                        "fields": ["city"]
+                                                                        }'/>
+                                    -->
+                                    <!--<div class="text-muted" t-if="event.event_type_id">
+                                        <i class="fa fa-tag"></i>
+                                        <span t-field="event.event_type_id"/>
+                                    </div>-->
+                                    <div groups="fit_bcnl_events.group_user">
+                                        <i class="fa fa-users"></i>
+                                        <span t-if="event.seats_availability == 'limited'">
+                                            <span t-esc="event.seats_max - event.seats_available"/>
+                                            van
+                                            <span t-field="event.seats_max"/>
+                                        </span>
+                                        <span t-if="event.seats_availability == 'unlimited'">
+                                            <span t-esc="seats_unconfirmed"/>
+                                            van onbeperkt
+                                        </span>
+                                    </div>
+                                    <div style="font-size:80%" groups="fit_bcnl_events.group_user">
+                                        <span t-esc="event.get_attendee_list()"/>
+                                        <!--
+                                                                        <t t-foreach="event.registration_ids" t-as="registration">
+                                                                            <t t-foreach="registration.partner_id" t-as="partner">
+                                                                                <span t-field="partner.name"/><span t-raw=", "/>
+                                                                            </t>
+                                                                        </t>
+                                        -->
+                                    </div>
+                                </div>
+                            </form>
+                            <div style="display:none;">
+                                <h4><!--DONT DELETE, NEEDED FOR website_events module--></h4>
                             </div>
-                            <div>
-                                <i class="fa fa-play-circle" aria-hidden="true"></i>
-                                <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
-                                <span> - </span>
-                                <i class="fa fa-stop-circle" aria-hidden="true"></i>
-                                <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_end_located,'%Y-%m-%d %H:%M:%S'))"/>
-                            </div>
-<!--
-                            <div itemprop="location" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["city"]
-                                    }'/>
--->
-                            <div class="text-muted" t-if="event.event_type_id">
-                                <i class="fa fa-tag"></i>
-                                <span t-field="event.event_type_id"/>
-                            </div>
-                            <div groups="fit_bcnl_events.group_user">
-                                <i class="fa fa-users"></i>
-                                <span t-if="event.seats_availability == 'limited'">
-                                    <span t-esc="event.seats_max - event.seats_available"/>
-                                    van
-                                    <span t-field="event.seats_max"/>
-                                </span>
-                                <span t-if="event.seats_availability == 'unlimited'">
-                                    <span t-esc="seats_unconfirmed"/>
-                                    van onbeperkt
-                                </span>
-                            </div>
-                            <div style="font-size:80%">
-                                <span t-esc="event.get_attendee_list()"/>
-<!--
-                                <t t-foreach="event.registration_ids" t-as="registration">
-                                    <t t-foreach="registration.partner_id" t-as="partner">
-                                        <span t-field="partner.name"/><span t-raw=", "/>
-                                    </t>
-                                </t>
--->
-                            </div>
-                        </div>
-                    </form>
-                    <div style="display:none;">
-                        <h4><!--DONT DELETE, NEEDED FOR website_events module--></h4>
-                    </div>
 
-                </li>
+                        </li>
+                    </t>
+                    <!--<t t-foreach="event_ids" t-as="event">
+
+                        <t t-if="event_day==time.strftime('%Y-%m-%d',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))">
+
+                            <div>
+                                <span t-field="event.name"/>
+                            </div>
+
+                        </t>
+
+                    </t>-->
+
+                </t>
+
             </ul>
         </xpath>
     </template>

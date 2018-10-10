@@ -19,7 +19,7 @@ class Partner(models.Model):
         can_subscribe = False
         event_type = str(event.event_type_id.name).lower()
         event_start = datetime.strptime(event.date_begin_located, '%Y-%m-%d %H:%M:%S')
-        if event_type == 'open':
+        if event_type == 'open' and len(self.fit_subscriptions) > 0:
             return True
         if event_start < datetime.now():
             return False
