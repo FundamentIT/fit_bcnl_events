@@ -3,7 +3,7 @@
 
     <template id="assets_backend" name="fit_bcnl_events_assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/fit_bcnl_events/static/src/css/fit_bcnl_events.css"/>
+            <!--<link rel="stylesheet" href="/fit_bcnl_events/static/src/css/fit_bcnl_events.css"/>-->
         </xpath>
     </template>
 

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!--<template id="event_description_full">
+        <xpath expr="//div[@class='panel panel-default']/div[@class='panel-heading']/h4" position="replace">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>TEST</h4>
+                </div>
+            </div>
+        </xpath>
+    </template>-->
+
     <template id="fit_bcnl_events.event_details" inherit_id="website_event.event_details">
         <xpath expr="//div[@itemscope='itemscope']" position="replace">
             <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">

@@ -26,17 +26,6 @@ Add the following attribute in the first <t> tag (name="Products"): groups="base
 Now you can open your website as an anonymous person. You do not retrieve the Shop menu and if you try to reach yourdatabasename/shop, you get an empty page
 
 
-hi,
-
-I followed the steps, and the user is no longer able to access to mysite.com/shop.
-
-but... the public user can still access to my shop store via google (in google I see all the items that I have on the shop) and access to "add to cart" button.
-
-To avoid this issue:
-
-You need to install the "Warning Messages and Alerts" module; then you need to go to Sales -> Customers -> "Public User" -> Warnings -> Warning on the Sales Order -> Blocking Message.
-
-Regards
 
 -->
 

@@ -91,10 +91,13 @@ class FitEventSubscription(models.Model):
                 end = datetime.strptime(self.subscription_end, '%Y-%m-%d').date()
 
                 if start <= present and end >= present:
+                    _logger.info('Montly subscription, can subscribe event_cat: %s, sub_cat: %s, start %s, end %s, present %s', event_cat,
+                                 sub_cat, start, end, present)
                     return True
 
             if type == 'tickets':
                 if self.subscription_counter > 0:
+                    _logger.info('Ticket subscription, can subscribe event_cat: %s, sub_cat: %s', event_cat, sub_cat)
                     return True
 
     def update(self, product, payment_type, invoice_line):

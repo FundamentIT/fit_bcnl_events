@@ -30,8 +30,9 @@ class FitAccountPayment(models.Model):
     def _update_fit_subscription(self, partner, product, payment_type, invoice_line):
         updated = False
         for subscription in partner.fit_subscriptions:
-            updated = subscription.update(product, payment_type, invoice_line)
-            _logger.info('Updated subscription? ' + str(updated) + ', type: ' + product.fit_subscription_type)
+            if not updated:
+                updated = subscription.update(product, payment_type, invoice_line)
+                _logger.info('Updated subscription? ' + str(updated) + ', type: ' + product.fit_subscription_type)
 
         if not updated and payment_type == 'inbound':
             _logger.info('Not updated, create subscription for type: ' + product.fit_subscription_type)

@@ -1,0 +1,118 @@
+a {
+    color:white;
+}
+
+body {
+    background-image: url('/web/image/943');
+    color: white;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.breadcrumb {
+    background-color: #777;
+}
+
+.fit_subscription_details_txt {
+    display: inline-block;
+    width: 30%;
+    font-size: 90%;
+}
+
+.fit_subscription_details_val {
+    font-size: 90%;
+}
+
+.fit_subscription_overview {
+    border: 1px solid;
+    border-radius: 10px;
+    padding-left: 5px;
+    font-size: 90%
+}
+
+.fit_subscription_overview_heading {
+    margin-top: 10px;
+}
+
+.fit_panel_heading {
+    border-left: 1px solid black;
+}
+
+.fit_media_heading {
+    color: darkorange;
+}
+.fit_button {
+    background-color: darkorange;
+    border-color: darkorange;
+}
+
+.fit_button:hover {
+    background-color: orange;
+    border-color: darkorange;
+}
+.fit_button:active {
+    background-color: orange;
+    border-color: darkorange;
+}
+.fit_button:focus {
+    background-color: orange;
+    border-color: darkorange;
+}
+
+.navbar-default {
+    background-color: black;
+    border-color: orange;
+    color: white;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: white;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+    color: #eee;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: #777;
+}
+
+.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
+    color: #777;
+}
+
+.o_list_number {
+    text-align: left !important;
+    white-space: nowrap;
+}
+
+.panel-default > .panel-heading{
+    color: darkorange;
+    background-color: black;
+    border-color: #ddd;
+}
+
+.panel-body {
+    background-color: #777;
+}
+
+.pagination > li > a {
+    background-color: #777;
+    color: #bbb;
+}
+
+.pagination > .active > a {
+    background-color: #bbb;
+    border-color: #ddd;
+    color: white;
+}
+
+.pagination > .active > a:focus {
+    background-color: #bbb;
+    border-color: #ddd;
+    color: white;
+}
+
+.pagination > .disabled > a {
+    background-color: #777;
+    color: white;
+}
