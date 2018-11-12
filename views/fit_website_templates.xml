@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <template id="fit_bcnl_events.assets_frontend" inherit_id="website.assets_frontend" name="FIT Website Frontend Assets">
-        <xpath expr="//script[last()]" position="after">
-            <script type="text/javascript" src="/fit_bcnl_events/static/src/js/fit_website.snippet.animation.js"></script>
-        </xpath>
-    </template>
-</odoo>
