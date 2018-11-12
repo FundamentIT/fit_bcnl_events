@@ -84,7 +84,6 @@ class FitEventSubscription(models.Model):
         if sub_cat == 'crossfit' and type == 'subscription' and event_cat == 'bootcamp':
             event_cat = 'crossfit'
         if sub_cat == event_cat:
-
             if type == 'subscription':
                 present = datetime.now().date()
                 start = datetime.strptime(self.subscription_start, '%Y-%m-%d').date()
@@ -103,7 +102,7 @@ class FitEventSubscription(models.Model):
     def update(self, product, payment_type, invoice_line):
         _logger.info('Updating subscription: ' + str(payment_type))
 
-        if (product.fit_subscription_type == self.subscription_type):
+        if product.fit_subscription_type == self.subscription_type:
             subscription_extension = self.get_subscription_type_length(product, invoice_line)
 
             if self.get_subscription_type(self.subscription_type) == 'subscription':

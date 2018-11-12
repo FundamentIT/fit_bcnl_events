@@ -23,15 +23,28 @@ class WebsiteEventController(http.Controller):
             for registration in event.registration_ids:
                 for partner in registration.partner_id:
                     if partner.id == partner_id:
-                        _logger.info('Deleting registration')
-                        registration.unlink()
+                        _logger.info('Found existing registration, set state to cancelled.')
+                        #registration.unlink()
+                        registration.state = 'cancel'
                         subscription_update_counter += 1
         else:
-            _logger.info('Creating registration')
-            http.request.env['event.registration'].sudo().create(
-                {'partner_id': partner_id,
-                 'event_id': event_id}
-            )
+            #_logger.info('Search existing registration')
+            existing_registration = http.request.env['event.registration'].sudo().search([('partner_id', '=', partner_id),
+                                                                                          ('event_id', '=', event.id)])
+            if existing_registration:
+                _logger.info('Found existing registration, set state to open (confirmed)')
+                existing_registration.state = 'open'
+            else:
+                _logger.info('No registration found, create new one')
+                http.request.env['event.registration'].sudo().create(
+                    {
+                        'partner_id': partner_id,
+                        'event_id': event_id,
+                        'name': partner.name if partner.name else '',
+                        'phone': partner.mobile if partner.mobile else '',
+                        'email': partner.email if partner.email else '',
+                    }
+                )
             subscription_update_counter -= 1
 
         self._update_counter_subscription(event, partner, subscription_update_counter)
@@ -40,10 +53,10 @@ class WebsiteEventController(http.Controller):
 
     def _update_counter_subscription(self, event, partner, subscription_update_counter):
         event_cat = str(event.event_type_id.name).lower()
-        cf_montly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'cf_montly'),
+        cf_monthly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'cf_montly'),
                                                                         ('subscription_partner', '=', partner.id)])
 
-        bc_montly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bc_montly'),
+        bc_monthly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bc_montly'),
                                                                         ('subscription_partner', '=', partner.id)])
         bc_tickets = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bc_tickets'),
                                                                         ('subscription_partner', '=', partner.id)])
@@ -55,9 +68,9 @@ class WebsiteEventController(http.Controller):
                 bz_tickets.subscription_counter += subscription_update_counter
 
         if event_cat == 'bootcamp':
-            if bc_montly and bc_montly.subscription_is_active:
+            if bc_monthly and bc_monthly.subscription_is_active:
                 return
-            if cf_montly and cf_montly.subscription_is_active:
+            if cf_monthly and cf_monthly.subscription_is_active:
                 return
             if bc_tickets and bc_tickets.subscription_is_active:
                 bc_tickets.subscription_counter += subscription_update_counter

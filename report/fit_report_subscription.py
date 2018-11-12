@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models, fields
-from odoo import tools
+from odoo import api, models, fields, tools
 
 
 class FitReportSubscription(models.Model):
-    """Events Analysis"""
+    """Subscription Analysis"""
     _name = "fit.report.subscription"
     _order = 'start desc'
     _auto = False

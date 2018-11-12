@@ -14,6 +14,14 @@ class Partner(models.Model):
 
     fit_subscriptions = fields.One2many(comodel_name='fit.subscription', inverse_name='subscription_partner', string='Inschrijving',
                                         store='True')
+    fit_subscription_count = fields.Integer('# Inschrijvingen', compute='_compute_total_scubscriptions')
+
+    def _compute_total_scubscriptions(self):
+        _logger.info('++++++++COMPUTING TOTAL+++++++++')
+        counter = 0
+        for subscription in self.fit_subscriptions:
+            counter += 1
+        self.fit_subscription_count = counter
 
     def can_subscribe(self, event):
         can_subscribe = False

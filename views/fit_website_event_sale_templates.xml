@@ -18,8 +18,8 @@
             <div class="row mt8">
                 <div class="col-md-3"/>
                 <div class="col-sm-6" style="width: 100%; text-align: center;">
-                <!--<div class="col-sm-6 media-list" id="middle_column">-->
-                    <t t-call="website.pager" />
+                    <!--<div class="col-sm-6 media-list" id="middle_column">-->
+                    <t t-call="website.pager"/>
                 </div>
                 <div class="col-md-3"/>
             </div>
@@ -28,39 +28,61 @@
         <xpath expr="//ul[@class='media-list']" position="replace">
             <div class="oe_demo fit_subscription_overview">
                 <hr/>
-                <ul class="media-list">
-                    <h4 class="media-heading fit_media_heading">
-                        <strong>Overzicht inschrijvingen</strong>
-                    </h4>
-
-                    <t t-foreach="request.env.user.partner_id.fit_subscriptions" t-as="subscription">
-                        <li class="media fit_bcnl_media">
-                            <span class="fit_subscription_details_txt">Type:</span>
-                            <span class="fit_subscription_details_val" t-field="subscription.subscription_type"/>
-                            <br/>
-                            <span class="fit_subscription_details_txt">Actief?:</span>
-                            <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == True">Ja</span>
-                            <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == False">Nee</span>
-                            <br/>
-                            <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
-                                <span class="fit_subscription_details_txt">Startdatum:</span>
-                                <span class="fit_subscription_details_val" t-field="subscription.subscription_start"/>
+                <t t-if="request.env.user.partner_id.fit_subscription_count != 0">
+                    <ul class="media-list">
+                        <h4 class="media-heading fit_media_heading">
+                            <strong>Overzicht inschrijvingen</strong>
+                        </h4>
+                        <t t-foreach="request.env.user.partner_id.fit_subscriptions" t-as="subscription">
+                            <li class="media fit_bcnl_media">
+                                <span class="fit_subscription_details_txt">Type:</span>
+                                <span class="fit_subscription_details_val" t-field="subscription.subscription_type"/>
                                 <br/>
-                            </t>
-                            <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
-                                <span class="fit_subscription_details_txt">Einddatum:</span>
-                                <span class="fit_subscription_details_val" t-field="subscription.subscription_end"/>
-                            </t>
-                            <t t-if="subscription.subscription_type == 'bz_tickets' or subscription.subscription_type == 'bc_tickets'">
-                                <span class="fit_subscription_details_txt">Strippen:</span>
-                                <span class="fit_subscription_details_val" t-field="subscription.subscription_counter"/>
-                            </t>
-                            <br/>
-                            <br/>
-                        </li>
-                    </t>
+                                <span class="fit_subscription_details_txt">Actief?:</span>
+                                <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == True">Ja</span>
+                                <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == False">Nee</span>
+                                <br/>
+                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                    <span class="fit_subscription_details_txt">Startdatum:</span>
+                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_start"/>
+                                    <br/>
+                                </t>
+                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                    <span class="fit_subscription_details_txt">Einddatum:</span>
+                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_end"/>
+                                </t>
+                                <t t-if="subscription.subscription_type == 'bz_tickets' or subscription.subscription_type == 'bc_tickets'">
+                                    <span class="fit_subscription_details_txt">Strippen:</span>
+                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_counter"/>
+                                </t>
+                                <br/>
+                                <br/>
+                            </li>
+                        </t>
+                    </ul>
+                </t>
+                <ul class="media-list" groups="!fit_bcnl_events.group_user">
+                    <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
+                        <strong>Je bent niet aangemeld...</strong>
+                    </h4>
+                    <li class="media">
+                        <span class="">Gebruik onderstaande knop om je in te schrijven.</span>
+                        <br/>
+                        <a class="btn btn-primary btn-lg mt8" href="/web/signup">
+                            <span class="o_default_snippet_text">Inschrijven</span>
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    <li class="media">
+                        <span class="">Gebruik onderstaande knop om in te loggen.</span>
+                        <br/>
+                        <a class="btn btn-primary btn-lg mt8" href="/web/login">
+                            <span class="o_default_snippet_text">Inloggen</span>
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </li>
                 </ul>
-                <ul class="media-list">
+                <ul class="media-list" groups="fit_bcnl_events.group_user">
                     <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
                         <strong>Is uw inschrijving verlopen?</strong>
                     </h4>
@@ -70,7 +92,7 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <button groups=""
                                     name="fit_event_renew" type="object"
-                                     class="btn btn-primary btn-lg mt8">
+                                    class="btn btn-primary btn-lg mt8">
                                 <span>Verniewen</span>
                                 <i class="fa fa-chevron-right"></i>
                             </button>
@@ -79,6 +101,7 @@
                 </ul>
                 <hr/>
             </div>
+
             <ul class="media-list">
                 <t t-set="event_days" t-value="[]"/>
                 <t t-foreach="event_ids" t-as="event">
@@ -108,10 +131,10 @@
                                         </a>
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="event_id" t-att-value="event.id"/>
-                                        <input type="hidden" name="event_is_participating" t-att-value="event.is_participating"/>
+                                        <input type="hidden" name="event_is_participating" t-att-value="event.fit_is_participating"/>
                                     </span>
                                     <div>
-                                        <button groups="fit_bcnl_events.group_user" t-if="not event.is_participating and
+                                        <button groups="fit_bcnl_events.group_user" t-if="not event.fit_is_participating and
                                         (
                                             (event.seats_available and
                                             event.seats_available &gt;= 0)
@@ -122,7 +145,7 @@
                                                 class="btn btn-success btn-sm label fit_button" style="line-height:2">Aanmelden
                                         </button>
                                         <button groups="fit_bcnl_events.group_user"
-                                                t-if="event.is_participating and request.env.user.partner_id.can_unsubscribe(event)"
+                                                t-if="event.fit_is_participating and request.env.user.partner_id.can_unsubscribe(event)"
                                                 type="submit"
                                                 class="btn btn-danger btn-sm label fit_button"
                                                 style="line-height:2">
