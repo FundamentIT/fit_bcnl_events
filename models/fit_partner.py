@@ -17,7 +17,6 @@ class Partner(models.Model):
     fit_subscription_count = fields.Integer('# Inschrijvingen', compute='_compute_total_scubscriptions')
 
     def _compute_total_scubscriptions(self):
-        _logger.info('++++++++COMPUTING TOTAL+++++++++')
         counter = 0
         for subscription in self.fit_subscriptions:
             counter += 1

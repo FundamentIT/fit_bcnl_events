@@ -48,8 +48,8 @@ class WebsiteEventController(http.Controller):
             subscription_update_counter -= 1
 
         self._update_counter_subscription(event, partner, subscription_update_counter)
-
-        return http.request.redirect('/event')
+        referer = str(http.request.httprequest.headers.environ['HTTP_REFERER'])
+        return http.request.redirect(str('/'+referer.split('/')[-1]))
 
     def _update_counter_subscription(self, event, partner, subscription_update_counter):
         event_cat = str(event.event_type_id.name).lower()
@@ -64,7 +64,7 @@ class WebsiteEventController(http.Controller):
                                                                         ('subscription_partner', '=', partner.id)])
 
         if event_cat == 'bokszak':
-            if bz_tickets and bz_tickets.subscription_is_active:
+            if bz_tickets:
                 bz_tickets.subscription_counter += subscription_update_counter
 
         if event_cat == 'bootcamp':
@@ -72,5 +72,5 @@ class WebsiteEventController(http.Controller):
                 return
             if cf_monthly and cf_monthly.subscription_is_active:
                 return
-            if bc_tickets and bc_tickets.subscription_is_active:
+            if bc_tickets:
                 bc_tickets.subscription_counter += subscription_update_counter

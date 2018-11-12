@@ -32,7 +32,6 @@ class FitEvent(models.Model):
                     event.fit_is_participating = True
                 else:
                     event.fit_is_participating = False
-                _logger.info('Is ' + str(email) + ' participating: ' + str(event.fit_is_participating))
 
     @api.onchange('date_begin')
     def update_day_of_week(self):
