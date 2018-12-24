@@ -17,7 +17,7 @@ class FitReportSubscription(models.Model):
     start = fields.Date('Inschrijving Start', readonly=True)
     end = fields.Date('Inschrijving Einde', readonly=True)
     counter = fields.Char('# Tickets', readonly=True)
-    type = fields.Selection([('cf_montly', 'Maandelijks (Crossfit)'),
+    type = fields.Selection([('cf_montly', 'Maandelijks (Crosstraining)'),
                                           ('bc_montly', 'Maandelijks (Bootcamp)'),
                                           ('bc_tickets', 'Strippenkaart (Bootcamp)'),
                                           ('bz_tickets', 'Strippenkaart (Bokszak)')],'Type', readonly=True, required=True)

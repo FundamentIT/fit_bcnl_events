@@ -32,8 +32,9 @@ odoo.define('fit_bcnl_events.website.snippets.animation', function (require) {
             if (isIE || isEdge) {
                 //console.log('NNNEEEEEEEEE!!!!');
             } else {
+                //20181221: changed to centered positioning for X-axel
                 //this.$target.css("background-position", "0px " + top + "px");
-                this.$target.css("background-position", "0px " + top + "px");
+                this.$target.css("background-position", "center " + top + "px");
             }
         },
     });

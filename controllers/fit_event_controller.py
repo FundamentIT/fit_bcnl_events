@@ -63,7 +63,7 @@ class WebsiteEventController(http.Controller):
         bz_tickets = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bz_tickets'),
                                                                         ('subscription_partner', '=', partner.id)])
 
-        if event_cat == 'bokszak':
+        if event_cat == 'bokszaktraining':
             if bz_tickets:
                 bz_tickets.subscription_counter += subscription_update_counter
 

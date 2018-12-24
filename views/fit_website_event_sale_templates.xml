@@ -38,7 +38,7 @@
                                 <span class="fit_subscription_details_txt">Type:</span>
                                 <span class="fit_subscription_details_val" t-field="subscription.subscription_type"/>
                                 <br/>
-                                <span class="fit_subscription_details_txt">Actief?:</span>
+                                <span class="fit_subscription_details_txt">Actief:</span>
                                 <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == True">Ja</span>
                                 <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == False">Nee</span>
                                 <br/>
@@ -65,17 +65,21 @@
                     <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
                         <strong>Je bent niet aangemeld...</strong>
                     </h4>
-                    <li class="media">
+                    <li class="media" style="text-align: center;">
+<!--
                         <span class="">Gebruik onderstaande knop om je in te schrijven.</span>
                         <br/>
+-->
                         <a class="btn btn-primary btn-lg mt8" href="/web/signup">
                             <span class="o_default_snippet_text">Inschrijven</span>
                             <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
-                    <li class="media">
+                    <li class="media" style="text-align: center;">
+<!--
                         <span class="">Gebruik onderstaande knop om in te loggen.</span>
                         <br/>
+-->
                         <a class="btn btn-primary btn-lg mt8" href="/web/login">
                             <span class="o_default_snippet_text">Inloggen</span>
                             <i class="fa fa-chevron-right"></i>
@@ -84,10 +88,11 @@
                 </ul>
                 <ul class="media-list" groups="fit_bcnl_events.group_user">
                     <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
-                        <strong>Is uw inschrijving verlopen?</strong>
+                        <strong>Nog geen inschrijving?</strong>
+                        <br/>
+                        <strong>Of is uw inschrijving verlopen?</strong>
                     </h4>
-                    <li class="media">
-                        <span class="">Gebruik onderstaande knop om deze te verlengen.</span>
+                    <li class="media" style="text-align: center;">
                         <form action="/shop" method="post">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <button groups=""

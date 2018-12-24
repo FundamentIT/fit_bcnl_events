@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
                 <field name="fit_subscription_type"/>
+                <!--<field name="website_sequence"/>-->
             </xpath>
         </field>
     </record>

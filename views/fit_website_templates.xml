@@ -4,5 +4,8 @@
         <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/fit_bcnl_events/static/src/js/fit_website.snippet.animation.js"></script>
         </xpath>
+        <xpath expr=".">
+            <script type="text/javascript" src="/fit_bcnl_events/static/src/js/fit_website_anchor_smooth_scroll.js"/>
+        </xpath>
     </template>
 </odoo>

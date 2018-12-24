@@ -31,7 +31,7 @@ class Partner(models.Model):
             return True
         if event_start < datetime.now():
             return False
-        if (event_start + relativedelta(hours=-24)) > datetime.now() and event_type == 'crossfit':
+        if (event_start + relativedelta(hours=-24)) > datetime.now() and event_type == 'crosstraining':
             return False
         for subscription in self.fit_subscriptions:
             if subscription._can_subscribe(event.event_type_id):

@@ -1,39 +1,64 @@
-/** https://codepen.io/FlorinPop17/pen/WEBNyx **/
-
-.bcnl_bg {
- /* animation: shrink 5s infinite alternate;
-  background-size: 105% 105%;
-  background-position: center center;
-  color: white;
-  height: 80vh;*/
+/**https://www.designrush.com/resources/designskilz/cool-css-buttons/**/
+.bcnl_home{
+  background:#fff;
+  border:none;
+  border-left:2px solid white;
+  border-right:2px solid white;
+  color:#000;
+  cursor:pointer;
+  display:block;
+  font-size:2em;
+  font-weight:bold;
+  outline:none;
+  padding:0.5em 1em;
+  position:relative;
+  text-decoration:none;
+  transition:800ms ease all;
+}
+.bcnl_home:hover{
+  background:#103dd2;
+  color:#fff;
+  font-weight:bold;
+  text-decoration:none;
+}
+.bcnl_home:before,.bcnl_home:after{
+  content:'';
+  position:absolute;
+  top:0;
+  right:0;
+  height:2px;
+  width:0;
+  background: #fff;
+  transition:400ms ease all;
+}
+.bcnl_home:after{
+  right:inherit;
+  top:inherit;
+  left:0;
+  bottom:0;
+}
+.bcnl_home:hover:before,.bcnl_home:hover:after{
+  width:100%;
+  transition:800ms ease all;
 }
 
-/*@keyframes shrink {
-  0% {
-    background-size: 105% 105%;
-  }
-  100% {
-    background-size: 100% 100%;
-  }
-}*/
+/** https://codepen.io/FlorinPop17/pen/WEBNyx **/
 
+.bcnl_bg {}
 .bcnl_start{
     margin-top: 50px;
 }
-
 .bcnl_container {
-  float: left;
+    float: left;
 }
 .bcnl_word {
-	font-size: 180px;
-    /*font-size: 25vh;*/
+	/**	font-size: 180px;**/
+	font-size: 15em;
 }
-
 .bcnl_word_small {
-	font-size: 40px;
-        /*font-size: 4vh;*/
+	/**font-size: 40px;**/
+	font-size: 5em;
 }
-
 .bcnl_word span {
 	cursor: pointer;
 	display: inline-block;

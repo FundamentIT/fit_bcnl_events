@@ -18,7 +18,7 @@ class FitEventSubscription(models.Model):
     subscription_end = fields.Date('Einde inschrijving')
     subscription_counter = fields.Integer('Strippenkaart')
     subscription_category = fields.Char()
-    subscription_type = fields.Selection([('cf_montly', 'Maandelijks (Crossfit)'),
+    subscription_type = fields.Selection([('cf_montly', 'Maandelijks (Crosstraining)'),
                                           ('bc_montly', 'Maandelijks (Bootcamp)'),
                                           ('bc_tickets', 'Strippenkaart (Bootcamp)'),
                                           ('bz_tickets', 'Strippenkaart (Bokszak)')])
@@ -51,7 +51,7 @@ class FitEventSubscription(models.Model):
     def on_change_type(self):
         if self.subscription_type:
             if self.subscription_type == 'cf_montly':
-                self.subscription_category = 'crossfit'
+                self.subscription_category = 'crosstraining'
             if self.subscription_type == 'bc_montly' or self.subscription_type == 'bc_tickets':
                 self.subscription_category = 'bootcamp'
             if self.subscription_type == 'bz_tickets':
@@ -77,12 +77,14 @@ class FitEventSubscription(models.Model):
 
     def _can_subscribe(self, event_type):
         event_cat = str(event_type.name).lower()
+        if event_cat == 'bokszaktraining':
+            event_cat = 'bokszak'
         type = self.get_subscription_type(self.subscription_type)
         if not self.subscription_category:
             self.on_change_type()
         sub_cat = str(self.subscription_category).lower()
-        if sub_cat == 'crossfit' and type == 'subscription' and event_cat == 'bootcamp':
-            event_cat = 'crossfit'
+        if sub_cat == 'crosstraining' and type == 'subscription' and event_cat == 'bootcamp':
+            event_cat = 'crosstraining'
         if sub_cat == event_cat:
             if type == 'subscription':
                 present = datetime.now().date()
