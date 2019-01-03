@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from itertools import product
 
 from dateutil.relativedelta import relativedelta
 
@@ -23,21 +24,25 @@ class FitAccountPayment(models.Model):
                 if state == 'paid':
                     for invoice_line in invoice.invoice_line_ids:
                         product = invoice_line.product_id
+                        #product_int_ref (default_code) = product interne referentie -> wordt misbruikt voor het aantal maanden binnen abonnement
+                        product_counter = int(product.default_code)
+                        if product_counter is None:
+                            product_counter = 1;
                         product_subscription_type = product.fit_subscription_type
                         if product_subscription_type:
-                            self._update_fit_subscription(partner, product, payment_type, invoice_line)
+                            self._update_fit_subscription(partner, product, payment_type, invoice_line, int(product_counter))
 
-    def _update_fit_subscription(self, partner, product, payment_type, invoice_line):
+    def _update_fit_subscription(self, partner, product, payment_type, invoice_line, product_counter):
         updated = False
         for subscription in partner.fit_subscriptions:
             if not updated:
-                updated = subscription.update(product, payment_type, invoice_line)
+                updated = subscription.update(product, payment_type, invoice_line, product_counter)
                 _logger.info('Updated subscription? ' + str(updated) + ', type: ' + product.fit_subscription_type)
 
         if not updated and payment_type == 'inbound':
             _logger.info('Not updated, create subscription for type: ' + product.fit_subscription_type)
             subscription_type = self.get_subscription_type(product.fit_subscription_type)
-            subscription_length = self.get_subscription_type_length(product, invoice_line)
+            subscription_length = self.get_subscription_type_length(product, invoice_line, product_counter)
 
             if subscription_type == 'subscription':
                 subscription_start = self._get_latest_subscription(partner)
@@ -66,13 +71,13 @@ class FitAccountPayment(models.Model):
 
         return latest_end_date
 
-    def get_subscription_type_length(self, product, invoice_line):
+    def get_subscription_type_length(self, product, invoice_line, product_counter):
         given_type = product.fit_subscription_type
         if self.get_subscription_type(given_type) == 'subscription':
-            return int(invoice_line.quantity)
+            return int(invoice_line.quantity) * int(product_counter)
         else:
             if self.get_subscription_type(given_type) == 'tickets':
-                return int(invoice_line.quantity)*10
+                return int(invoice_line.quantity) * int(product_counter) * 10
         return 0
 
     def get_subscription_type(self, given_type):

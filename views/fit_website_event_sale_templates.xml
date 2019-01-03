@@ -98,7 +98,7 @@
                             <button groups=""
                                     name="fit_event_renew" type="object"
                                     class="btn btn-primary btn-lg mt8">
-                                <span>Verniewen</span>
+                                <span>Vernieuwen</span>
                                 <i class="fa fa-chevron-right"></i>
                             </button>
                         </form>
@@ -156,6 +156,12 @@
                                                 style="line-height:2">
                                             Aanmelding annuleren
                                         </button>
+                                        <a href="#" groups="fit_bcnl_events.group_user"
+                                                t-if="not event.seats_availability == 'unlimited' and (not event.fit_is_participating and event.seats_available == 0)"
+                                                class="btn btn-danger btn-sm label fit_button"
+                                                style="line-height:2">
+                                            Vol
+                                        </a>
                                     </div>
                                     <div>
                                         <i class="fa fa-play-circle" aria-hidden="true"></i>
@@ -232,7 +238,7 @@
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <button groups="fit_bcnl_events.group_user"
                                         name="fit_event_renew" type="object"
-                                        class="btn btn-info btn-sm label fit_button" style="line-height:1.5">Verniewen
+                                        class="btn btn-info btn-sm label fit_button" style="line-height:1.5">Vernieuwen
                                 </button>
                             </form>
                         </p>

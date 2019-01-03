@@ -57,13 +57,13 @@ class FitEventSubscription(models.Model):
             if self.subscription_type == 'bz_tickets':
                 self.subscription_category = 'bokszak'
 
-    def get_subscription_type_length(self, product, invoice_line):
+    def get_subscription_type_length(self, product, invoice_line, product_counter):
         given_type = product.fit_subscription_type
         if self.get_subscription_type(given_type) == 'subscription':
-            return int(invoice_line.quantity)
+            return int(invoice_line.quantity) * int(product_counter)
         else:
             if self.get_subscription_type(given_type) == 'tickets':
-                return int(invoice_line.quantity) * 10
+                return int(invoice_line.quantity) * int(product_counter) * 10
         return 0
 
     def get_subscription_type(self, given_type):
@@ -101,11 +101,11 @@ class FitEventSubscription(models.Model):
                     _logger.info('Ticket subscription, can subscribe event_cat: %s, sub_cat: %s', event_cat, sub_cat)
                     return True
 
-    def update(self, product, payment_type, invoice_line):
+    def update(self, product, payment_type, invoice_line, product_counter):
         _logger.info('Updating subscription: ' + str(payment_type))
 
         if product.fit_subscription_type == self.subscription_type:
-            subscription_extension = self.get_subscription_type_length(product, invoice_line)
+            subscription_extension = self.get_subscription_type_length(product, invoice_line, product_counter)
 
             if self.get_subscription_type(self.subscription_type) == 'subscription':
 
