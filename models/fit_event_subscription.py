@@ -115,8 +115,15 @@ class FitEventSubscription(models.Model):
 
                     if present > current_end_date:
                         new_end_date = present + relativedelta(months=+subscription_extension)
+                        old_end_date = present
                     else:
                         new_end_date = current_end_date + relativedelta(months=+subscription_extension)
+                        old_end_date = current_end_date
+
+                    if new_end_date.day < old_end_date.day:
+                        new_end_date = new_end_date + relativedelta(months=+1)
+                        new_end_date = new_end_date.replace(day=1)
+
                     self.subscription_end = new_end_date
                     return True
                 else:
