@@ -67,6 +67,9 @@ class WebsiteEventController(http.Controller):
 
     def _update_counter_subscription(self, event, partner, subscription_update_counter):
         event_cat = str(event.event_type_id.name).lower()
+        ai_monthly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'ai_montly'),
+                                                                        ('subscription_partner', '=', partner.id)])
+
         cf_monthly = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'cf_montly'),
                                                                         ('subscription_partner', '=', partner.id)])
 
@@ -76,6 +79,10 @@ class WebsiteEventController(http.Controller):
                                                                         ('subscription_partner', '=', partner.id)])
         bz_tickets = http.request.env['fit.subscription'].sudo().search([('subscription_type', '=', 'bz_tickets'),
                                                                         ('subscription_partner', '=', partner.id)])
+
+        # If user has active all-in subscription then skip furter processing
+        if ai_monthly.subscription_is_active:
+            return;
 
         if event_cat == 'bokszaktraining':
             if bz_tickets:

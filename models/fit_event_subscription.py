@@ -18,7 +18,8 @@ class FitEventSubscription(models.Model):
     subscription_end = fields.Date('Einde inschrijving')
     subscription_counter = fields.Integer('Strippenkaart')
     subscription_category = fields.Char()
-    subscription_type = fields.Selection([('cf_montly', 'Maandelijks (Crosstraining)'),
+    subscription_type = fields.Selection([('ai_montly', 'Maandelijks (All-in)'),
+                                          ('cf_montly', 'Maandelijks (Crosstraining)'),
                                           ('bc_montly', 'Maandelijks (Bootcamp)'),
                                           ('bc_tickets', 'Strippenkaart (Bootcamp)'),
                                           ('bz_tickets', 'Strippenkaart (Bokszak)')])
@@ -50,6 +51,8 @@ class FitEventSubscription(models.Model):
     @api.onchange('subscription_type')
     def on_change_type(self):
         if self.subscription_type:
+            if self.subscription_type == 'ai_montly':
+                self.subscription_category = 'allin'
             if self.subscription_type == 'cf_montly':
                 self.subscription_category = 'crosstraining'
             if self.subscription_type == 'bc_montly' or self.subscription_type == 'bc_tickets':
@@ -68,6 +71,7 @@ class FitEventSubscription(models.Model):
 
     def get_subscription_type(self, given_type):
         type_type = {
+            'ai_montly': 'subscription',
             'cf_montly': 'subscription',
             'bc_montly': 'subscription',
             'bc_tickets': 'tickets',
@@ -82,23 +86,23 @@ class FitEventSubscription(models.Model):
         type = self.get_subscription_type(self.subscription_type)
         if not self.subscription_category:
             self.on_change_type()
-        sub_cat = str(self.subscription_category).lower()
-        if sub_cat == 'crosstraining' and type == 'subscription' and event_cat == 'bootcamp':
+        subscription_cat = str(self.subscription_category).lower()
+        if subscription_cat == 'crosstraining' and type == 'subscription' and event_cat == 'bootcamp':
             event_cat = 'crosstraining'
-        if sub_cat == event_cat:
+        if subscription_cat == event_cat or subscription_cat == 'allin':
             if type == 'subscription':
                 present = datetime.now().date()
                 start = datetime.strptime(self.subscription_start, '%Y-%m-%d').date()
                 end = datetime.strptime(self.subscription_end, '%Y-%m-%d').date()
 
                 if start <= present and end >= present:
-                    _logger.info('Montly subscription, can subscribe event_cat: %s, sub_cat: %s, start %s, end %s, present %s', event_cat,
-                                 sub_cat, start, end, present)
+                    _logger.info('Montly subscription, can subscribe event_cat: %s, subscription_cat: %s, start %s, end %s, present %s', event_cat,
+                                 subscription_cat, start, end, present)
                     return True
 
             if type == 'tickets':
                 if self.subscription_counter > 0:
-                    _logger.info('Ticket subscription, can subscribe event_cat: %s, sub_cat: %s', event_cat, sub_cat)
+                    _logger.info('Ticket subscription, can subscribe event_cat: %s, subscription_cat: %s', event_cat, subscription_cat)
                     return True
 
     def update(self, product, payment_type, invoice_line, product_counter):

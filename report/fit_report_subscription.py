@@ -17,10 +17,11 @@ class FitReportSubscription(models.Model):
     start = fields.Date('Inschrijving Start', readonly=True)
     end = fields.Date('Inschrijving Einde', readonly=True)
     counter = fields.Char('# Tickets', readonly=True)
-    type = fields.Selection([('cf_montly', 'Maandelijks (Crosstraining)'),
-                                          ('bc_montly', 'Maandelijks (Bootcamp)'),
-                                          ('bc_tickets', 'Strippenkaart (Bootcamp)'),
-                                          ('bz_tickets', 'Strippenkaart (Bokszak)')],'Type', readonly=True, required=True)
+    type = fields.Selection([('ai_montly', 'Maandelijks (All-in)'),
+                             ('cf_montly', 'Maandelijks (Crosstraining)'),
+                             ('bc_montly', 'Maandelijks (Bootcamp)'),
+                             ('bc_tickets', 'Strippenkaart (Bootcamp)'),
+                             ('bz_tickets', 'Strippenkaart (Bokszak)')],'Type', readonly=True, required=True)
 
     due_time_week = fields.Integer(' # Verloopt binnen een week')
     due_time_day = fields.Integer(' # Verloopt binnen een dag')

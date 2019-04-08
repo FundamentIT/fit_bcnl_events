@@ -64,7 +64,8 @@ class FitAccountPayment(models.Model):
     def _get_latest_subscription(self, partner):
         latest_end_date = datetime.now().date()
         for subscription in partner.fit_subscriptions:
-            if subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'bc_montly':
+            if subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type\
+                    == 'bc_montly':
                     end_date = datetime.strptime(subscription.subscription_end, '%Y-%m-%d').date()
                     if end_date > latest_end_date:
                         latest_end_date = end_date
@@ -82,6 +83,7 @@ class FitAccountPayment(models.Model):
 
     def get_subscription_type(self, given_type):
         type_type = {
+            'ai_montly': 'subscription',
             'cf_montly': 'subscription',
             'bc_montly': 'subscription',
             'bc_tickets': 'tickets',

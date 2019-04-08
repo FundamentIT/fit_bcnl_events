@@ -42,12 +42,14 @@
                                 <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == True">Ja</span>
                                 <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == False">Nee</span>
                                 <br/>
-                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                <t
+                                        t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
                                     <span class="fit_subscription_details_txt">Startdatum:</span>
                                     <span class="fit_subscription_details_val" t-field="subscription.subscription_start"/>
                                     <br/>
                                 </t>
-                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                <t
+                                        t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
                                     <span class="fit_subscription_details_txt">Einddatum:</span>
                                     <span class="fit_subscription_details_val" t-field="subscription.subscription_end"/>
                                 </t>
@@ -198,53 +200,4 @@
         </xpath>
     </template>
 
-    <!--template id="event_right_photos" inherit_id="website_event.index" active="True" customize_show="True" name="Inschrijving">
-        <xpath expr="//div[@id='right_column']" position="inside">
-            <div class="row" groups="fit_bcnl_events.group_user">
-                <div class="col-md-12 mb16">
-                    <div class="oe_demo fit_subscription_overview">
-                        <p class="fit_subscription_overview_heading">
-                            <b>Overzicht inschrijvingen</b>
-                            <br/>
-                            <br/>
-                            <t t-foreach="request.env.user.partner_id.fit_subscriptions" t-as="subscription">
-                                <span class="fit_subscription_details_txt">Type:</span>
-                                <span class="fit_subscription_details_val" t-field="subscription.subscription_type"/>
-                                <br/>
-                                <span class="fit_subscription_details_txt">Actief?:</span>
-                                <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == True">Ja</span>
-                                <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == False">Nee</span>
-                                <br/>
-                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
-                                    <span class="fit_subscription_details_txt">Startdatum:</span>
-                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_start"/>
-                                    <br/>
-                                </t>
-                                <t t-if="subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
-                                    <span class="fit_subscription_details_txt">Einddatum:</span>
-                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_end"/>
-                                </t>
-                                <t t-if="subscription.subscription_type == 'bz_tickets' or subscription.subscription_type == 'bc_tickets'">
-                                    <span class="fit_subscription_details_txt">Strippen:</span>
-                                    <span class="fit_subscription_details_val" t-field="subscription.subscription_counter"/>
-                                </t>
-                                <br/>
-                                <br/>
-                            </t>
-                            <span class="">Is uw inschrijving verlopen?</span>
-                            <br/>
-                            <span class="">Gebruik onderstaande knop om deze te verlengen.</span>
-                            <form action="/shop" method="post">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <button groups="fit_bcnl_events.group_user"
-                                        name="fit_event_renew" type="object"
-                                        class="btn btn-info btn-sm label fit_button" style="line-height:1.5">Vernieuwen
-                                </button>
-                            </form>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </xpath>
-    </template-->
 </odoo>
