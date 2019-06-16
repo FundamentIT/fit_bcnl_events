@@ -4,7 +4,7 @@
 {
     'name': 'FIT BCNL Events',
     'category': 'Website',
-    'version': '10.0.0.0.1',
+    'version': '10.0.1.0.0',
     'author': 'Fundament IT',
     'website': 'https://fundament.it/',
     'licence': 'AGPL-3',

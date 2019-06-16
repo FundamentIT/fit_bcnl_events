@@ -42,14 +42,12 @@
                                 <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == True">Ja</span>
                                 <span class="fit_subscription_details_val" t-if="subscription.subscription_is_active == False">Nee</span>
                                 <br/>
-                                <t
-                                        t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                <t t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
                                     <span class="fit_subscription_details_txt">Startdatum:</span>
                                     <span class="fit_subscription_details_val" t-field="subscription.subscription_start"/>
                                     <br/>
                                 </t>
-                                <t
-                                        t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                <t t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
                                     <span class="fit_subscription_details_txt">Einddatum:</span>
                                     <span class="fit_subscription_details_val" t-field="subscription.subscription_end"/>
                                 </t>

@@ -83,6 +83,8 @@ class FitEventSubscription(models.Model):
         event_cat = str(event_type.name).lower()
         if event_cat == 'bokszaktraining':
             event_cat = 'bokszak'
+        if event_cat == 'open':
+            event_cat = 'crosstraining'
         type = self.get_subscription_type(self.subscription_type)
         if not self.subscription_category:
             self.on_change_type()

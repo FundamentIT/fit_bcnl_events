@@ -62,7 +62,13 @@ class WebsiteEventController(http.Controller):
                 _logger.error('Unable to register: '+str(e))
 
         referer = str(http.request.httprequest.headers.environ['HTTP_REFERER'])
-        redirect = str('/'+referer.split('/')[-1])
+        redirect = '/event' + str('/'+referer.split('/event')[-1])
+        return http.request.redirect(redirect)
+
+    @http.route(['/mijn-account/trainingen'], type='http', auth="public", website=True)
+    def redirect_event(self, **post):
+        _logger.info('OLD my account trainingen reference, redirect to /events')
+        redirect = '/event'
         return http.request.redirect(redirect)
 
     def _update_counter_subscription(self, event, partner, subscription_update_counter):
@@ -82,7 +88,7 @@ class WebsiteEventController(http.Controller):
 
         # If user has active all-in subscription then skip furter processing
         if ai_monthly.subscription_is_active:
-            return;
+            return
 
         if event_cat == 'bokszaktraining':
             if bz_tickets:
