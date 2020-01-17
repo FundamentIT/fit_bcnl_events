@@ -131,6 +131,8 @@ class FitEventSubscription(models.Model):
                         new_end_date = new_end_date.replace(day=1)
 
                     self.subscription_end = new_end_date
+                    update_msg = 'Inschrijving bijgewerkt met # %s maanden; van %s tot %s' % (subscription_extension, old_end_date, new_end_date)
+                    self.subscription_partner.message_post(body=update_msg)
                     return True
                 else:
                     if payment_type == 'outbound':
@@ -141,12 +143,17 @@ class FitEventSubscription(models.Model):
                             self.subscription_end = present + relativedelta(days=-1)
                         else:
                             self.subscription_end = new_end_date
+
+                        update_msg = 'Inschrijving bijgewerkt met -# %s maanden; naam %s' % (subscription_extension, new_end_date)
+                        self.subscription_partner.message_post(body=update_msg)
                         return True
             else:
                 if self.get_subscription_type(self.subscription_type) == 'tickets':
 
                     if payment_type == 'inbound':
                         self.subscription_counter += subscription_extension
+                        update_msg = 'Inschrijving bijgewerkt met # %s tickets' % (subscription_extension)
+                        self.subscription_partner.message_post(body=update_msg)
                         return True
                     else:
                         if payment_type == 'outbound':
@@ -155,5 +162,7 @@ class FitEventSubscription(models.Model):
                             if new_subscription_counter < 0:
                                 new_subscription_counter = 0
                             self.subscription_counter = new_subscription_counter
+                            update_msg = 'Inschrijving bijgewerkt met -# %s tickets' % (subscription_extension)
+                            self.subscription_partner.message_post(body=update_msg)
                             return True
         return False

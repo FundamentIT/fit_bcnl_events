@@ -5,7 +5,9 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='date_end']" position="after">
+            <xpath expr="//field[@name='date_end']" position="before">
+                <field name="fit_start_time"/>
+                <field name="fit_end_time"/>
                 <field name="fit_day_of_week"/>
                 <field name="fit_repetition_enabled"/>
                 <field name="fit_repetition"/>

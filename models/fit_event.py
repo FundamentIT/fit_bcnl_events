@@ -1,4 +1,5 @@
 import logging
+import pytz
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -15,6 +16,8 @@ class FitEvent(models.Model):
     fit_is_participating = fields.Boolean("Is Participating", compute="_fit_compute_is_participating")
     website_published = fields.Boolean(default=True)
     fit_day_of_week = fields.Char(string='Dag', default='')
+    fit_start_time = fields.Char(string='Start tijd', default='Onbekend')
+    fit_end_time = fields.Char(string='Eind tijd', default='Onbekend')
     fit_repetition_enabled = fields.Boolean(string='Herhalen?', default=False)
     fit_repetition = fields.Selection([('daily', 'Dagelijks'),
                                        ('weekly', 'Wekelijks'),
@@ -39,6 +42,18 @@ class FitEvent(models.Model):
         if start_date:
             self.fit_day_of_week = datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S').strftime('%a')
 
+    @api.onchange('date_begin')
+    def update_start_time(self):
+        update_time_begin = self.date_begin_located
+        if update_time_begin:
+            self.fit_start_time = datetime.strptime(update_time_begin, '%Y-%m-%d %H:%M:%S').strftime('%H:%M')
+
+    @api.onchange('date_end')
+    def update_end_time(self):
+        update_time_end = self.date_end_located
+        if update_time_end:
+            self.fit_end_time = datetime.strptime(update_time_end, '%Y-%m-%d %H:%M:%S').strftime('%H:%M')
+
     def get_attendee_list(self):
         attendee_list = str('')
         counter = 1
@@ -62,7 +77,7 @@ class FitEvent(models.Model):
             if repeating_event.fit_repetition == 'weekly':
                 self._handle_weekly_event_repetition(repeating_event)
             if repeating_event.fit_repetition == 'monthly':
-                self._handle_montly_event_repetition(repeating_event)
+                self._handle_monthly_event_repetition(repeating_event)
 
     def _handle_daily_event_repetition(self, old_repeating_event):
         _logger.info('Handling daily repeating event')
@@ -106,8 +121,22 @@ class FitEvent(models.Model):
     def _create_new_event(self, old_repeating_event, new_start_date, new_end_date):
         _logger.info('Start creation new repeating event')
         new_repeating_event = old_repeating_event.copy(default={'website_published': True})
+        #new_repeating_event = old_repeating_event.copy(default={'website_published': True, 'date_tz': 'Europe/Amsterdam'})
+        #new_repeating_event = old_repeating_event.copy(default={'website_published': True, 'date_tz': 'UTC'})
+        #ams_timezone = pytz.timezone('Europe/Amsterdam')
+        utc_timezone = pytz.timezone('UTC')
+        #new_end_date = utc_timezone.localize(new_end_date).astimezone(ams_timezone)
+        new_end_date = utc_timezone.localize(new_end_date)
+        #new_start_date = utc_timezone.localize(new_start_date).astimezone(ams_timezone)
+        new_start_date = utc_timezone.localize(new_start_date)
+
+        #new_repeating_event.date_end_located = new_end_date
         new_repeating_event.date_end = new_end_date
+        new_repeating_event.fit_end_time = old_repeating_event.fit_end_time
+
+        #new_repeating_event.date_begin_located = new_start_date
         new_repeating_event.date_begin = new_start_date
+        new_repeating_event.fit_start_time = old_repeating_event.fit_start_time
 
         # 'date_begin': str(new_start_date), 'date_end_': str(new_end_date),
         old_repeating_event.fit_repetition_enabled = False
