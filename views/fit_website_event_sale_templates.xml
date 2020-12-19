@@ -85,7 +85,7 @@
                             <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
-                    <!--20201217 TH new -->
+                    <!--20201217 FIT TH new -->
                     <t t-if="request.env.user.partner_id.x_free_month_given == False">
 
                         <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
