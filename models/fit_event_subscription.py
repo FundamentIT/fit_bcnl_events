@@ -107,6 +107,30 @@ class FitEventSubscription(models.Model):
                     _logger.info('Ticket subscription, can subscribe event_cat: %s, subscription_cat: %s', event_cat, subscription_cat)
                     return True
 
+    def update_free(self):
+        _logger.info('Updating subscription for free month!')
+        if self.get_subscription_type(self.subscription_type) == 'subscription':
+            subscription_extension = 1
+            present = datetime.now().date()
+            current_end_date = datetime.strptime(self.subscription_end, '%Y-%m-%d').date()
+            if present > current_end_date:
+                new_end_date = present + relativedelta(months=+subscription_extension)
+                old_end_date = present
+            else:
+                new_end_date = current_end_date + relativedelta(months=+subscription_extension)
+                old_end_date = current_end_date
+
+            if new_end_date.day < old_end_date.day:
+                new_end_date = new_end_date + relativedelta(months=+1)
+                new_end_date = new_end_date.replace(day=1)
+
+            self.subscription_end = new_end_date
+            update_msg = 'Inschrijving bijgewerkt (gratis) met # %s maanden; van %s tot %s' % (subscription_extension, old_end_date,
+                                                                                               new_end_date)
+            self.subscription_partner.message_post(body=update_msg)
+
+            return True
+
     def update(self, product, payment_type, invoice_line, product_counter):
         _logger.info('Updating subscription: ' + str(payment_type))
 
@@ -166,3 +190,4 @@ class FitEventSubscription(models.Model):
                             self.subscription_partner.message_post(body=update_msg)
                             return True
         return False
+

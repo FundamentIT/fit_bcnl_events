@@ -12,6 +12,25 @@ _logger = logging.getLogger(__name__)
 
 class WebsiteEventController(http.Controller):
 
+    @http.route(['/fit_subscribe_controller/update'], type='http', auth="public", website=True)
+    def get_free_month(self, **post):
+        _logger.info('Start update free month.')
+        #def _update_fit_subscription_free(self, partner):
+        updated = False
+        partner = http.request.env.user.partner_id
+        free_month_registered = partner.x_free_month_given
+        _logger.info('Partner is already registered for free month: '+str(free_month_registered))
+        if not free_month_registered:
+            for subscription in partner.fit_subscriptions:
+                if not updated:
+                    updated = subscription.update_free()
+                    partner.x_free_month_given = True
+                    _logger.info('Updated subscription? ' + str(updated))
+
+        referer = str(http.request.httprequest.headers.environ['HTTP_REFERER'])
+        redirect = '/event' + str('/'+referer.split('/event')[-1])
+        return http.request.redirect(redirect)
+
     @http.route(['/fit_subscribe_controller/subscribe'], type='http', auth="public", website=True)
     def event_register(self, event_id, event_is_participating, **post):
         event_id = int(event_id)

@@ -47,8 +47,7 @@
                                     <span class="fit_subscription_details_val" t-field="subscription.subscription_start"/>
                                     <br/>
                                 </t>
-                                <t
-                                        t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
+                                <t t-if="subscription.subscription_type == 'ai_montly' or subscription.subscription_type == 'cf_montly' or subscription.subscription_type == 'cf_quarterly' or subscription.subscription_type == 'cf_half_year' or subscription.subscription_type == 'bc_montly'">
                                     <span class="fit_subscription_details_txt">Einddatum:</span>
                                     <span class="fit_subscription_details_val" t-field="subscription.subscription_end"/>
                                 </t>
@@ -86,6 +85,30 @@
                             <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
+                    <!--20201217 TH new -->
+                    <t t-if="request.env.user.partner_id.x_free_month_given == False">
+
+                        <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
+                            <strong>Klik hier onder om je aan te melden voor een gratis extra maand...</strong>
+                        </h4>
+                        <li class="media" style="text-align: center;">
+                            <form action="/fit_subscribe_controller/update" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <button groups=""
+                                        name="fit_event_free_month" type="object"
+                                        class="btn btn-primary btn-lg mt8">
+                                    <span>Gratis maand</span>
+                                    <i class="fa fa-chevron-right"></i>
+                                </button>
+                            </form>
+                        </li>
+                    </t>
+                    <t t-if="request.env.user.partner_id.x_free_month_given == True">
+                        <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
+                            <strong>Gratis maand toegevoegd!...</strong>
+                        </h4>
+                    </t>
+                    <!--20201217 TH end -->
                 </ul>
                 <ul class="media-list" groups="fit_bcnl_events.group_user">
                     <h4 class="media-heading fit_media_heading" stlye="text-align:center;">
@@ -166,10 +189,10 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-play-circle" aria-hidden="true"></i>
-                                        <span t-esc="event.fit_start_time"/>
+                                        <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_begin_located,'%Y-%m-%d %H:%M:%S'))"/>
                                         <span>-</span>
                                         <i class="fa fa-stop-circle" aria-hidden="true"></i>
-                                        <span t-esc="event.fit_end_time"/>
+                                        <span t-esc="time.strftime('%H:%M',time.strptime(event.with_context(tz=event.date_tz).date_end_located,'%Y-%m-%d %H:%M:%S'))"/>
                                     </div>
                                     <div groups="fit_bcnl_events.group_user">
                                         <i class="fa fa-users"></i>
